@@ -11,17 +11,17 @@
 
 
     <groupId>de.mpicbg.tomancaklab</groupId>
-    <artifactId>Mastodon-Plugins</artifactId>
+    <artifactId>MastodonExperiments</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
     <organization>
-        <name>MPI-CBG</name>
-        <url>http://www.mpi-cbg.de</url>
+        <name>None</name>
+        <url>None</url>
     </organization>
 
-    <name>Mastodon-dedicated Plugins for the Fiji world</name>
-    <description>Implementation of various plugins...</description>
-    <url>https://github.com/xulman/TomancakLab</url>
+    <name>Experiments with Mastodon</name>
+    <description></description>
+    <url></url>
     <inceptionYear>2019</inceptionYear>
 
     <packaging>jar</packaging>
@@ -35,17 +35,7 @@
 
     <developers>
         <developer>
-            <id>xulman</id>
-            <name>Vladimír Ulman</name>
-            <url>http://www.fi.muni.cz/~xulman/</url>
-            <roles>
-                <role>founder</role>
-                <role>developer</role>
-                <role>debugger</role>
-                <role>reviewer</role>
-                <role>support</role>
-                <role>maintainer</role>
-            </roles>
+            <name>None</name>
         </developer>
     </developers>
     <contributors>
@@ -78,8 +68,8 @@
 
     <properties>
         <license.licenseName>cc0</license.licenseName>
-        <license.copyrightOwners>Tomancak lab</license.copyrightOwners>
-        <license.projectName>TomancakLab's Mastodon Plugins</license.projectName>
+        <license.copyrightOwners>None</license.copyrightOwners>
+        <license.projectName>None</license.projectName>
     </properties>
 
     <repositories>
