@@ -99,7 +99,7 @@ public class ConvertTimeToGenerations extends AbstractContextual implements Mast
         final Model model = pluginAppModel.getAppModel().getModel();
         ModelGraph modelGraph = model.getGraph();
         final SpatioTemporalIndex<Spot> spots = model.getSpatioTemporalIndex();
-        condenseGraph(spots, 0, 400, modelGraph);
+        condenseGraph(spots, pluginAppModel.getAppModel().getMinTimepoint(), pluginAppModel.getAppModel().getMaxTimepoint(), modelGraph);
     }
 
     private void condenseGraph(SpatioTemporalIndex<Spot> spots, int timeStart, int timeEnd, ModelGraph modelGraph) {
@@ -112,7 +112,7 @@ public class ConvertTimeToGenerations extends AbstractContextual implements Mast
         ModelGraph modelGraphCondensed = new ModelGraph();
         double[] pos;
         double[][] covariance = new double[3][3];
-        for (int time = timeStart; time < timeEnd; time++) {
+        for (int time = timeStart; time < timeEnd+1; time++) {
 
             for (final Spot loopspot : spots.getSpatialIndex(time)) {
 
@@ -163,7 +163,10 @@ public class ConvertTimeToGenerations extends AbstractContextual implements Mast
 
 
                 } else {
+
                     Spot parent = spot.incomingEdges().get(0).getSource();
+                    if (parent != null) {
+
                     numberChildren = spot.outgoingEdges().size();
                     numberSiblings = spot.incomingEdges().get(0).getSource().outgoingEdges().size() - 1;
                     if (numberChildren > 1 && numberSiblings == 0) {
@@ -209,7 +212,7 @@ public class ConvertTimeToGenerations extends AbstractContextual implements Mast
                         divisionCounter.put(spot, divisionCounter.get(parent));
                         ancestry.put(spot, ancestry.get(parent));
                     }
-
+                }
 
                 }
 
