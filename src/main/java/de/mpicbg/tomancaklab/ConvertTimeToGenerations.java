@@ -137,6 +137,7 @@ public class ConvertTimeToGenerations extends AbstractContextual implements Mast
                         spot.getCovariance(covariance);
                         final Spot currentVertex = modelGraphCondensed.addVertex().init(divisionCounter.get(parent) + 1, pos, covariance);
                         currentVertex.setLabel(spot.getLabel());
+
                         avatar.put(spot, currentVertex);
                         modelGraphCondensed.addEdge(parentVertex, currentVertex);
                         divisionCounter.put(spot, divisionCounter.get(parent));
