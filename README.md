@@ -15,5 +15,5 @@ Experiments with TrackMate v3 or [Mastodon](https://github.com/bigdataviewer/mas
    
 ## Condensing the modelGraph instance so that only divisions are visible
 
-<p float="center"><figure><img src="https://github.com/MLbyML/MLbyML.github.io/blob/master/images/2019-07-13/03_condensedSkeletonGraph.png" alt="" width="200" ><figcaption>
+<p float="center"><figure><img src="https://github.com/MLbyML/MLbyML.github.io/blob/master/images/2019-07-13/03_condensedSkeletonGraph.png" alt="" width="500" ><figcaption>
    [A "condensed" lineage tree: here, only the dividing nuclei are visible. The y-axis depicts the conventional display of the total time]</figcaption></figure></p>
