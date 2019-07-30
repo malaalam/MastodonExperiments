@@ -8,8 +8,6 @@
         <version>25.0.0</version>
         <relativePath/>
     </parent>
-
-
     <groupId>de.mpicbg.tomancaklab</groupId>
     <artifactId>MastodonExperiments</artifactId>
     <version>1.0.0-SNAPSHOT</version>
@@ -18,12 +16,10 @@
         <name>None</name>
         <url>None</url>
     </organization>
-
     <name>Experiments with Mastodon</name>
     <description></description>
     <url></url>
     <inceptionYear>2019</inceptionYear>
-
     <packaging>jar</packaging>
     <licenses>
         <license>
@@ -32,7 +28,6 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-
     <developers>
         <developer>
             <name>None</name>
@@ -43,15 +38,12 @@
             <name>None</name>
         </contributor>
     </contributors>
-
     <mailingLists>
         <mailingList>
             <name>ImageJ Forum</name>
             <archive>http://forum.imagej.net/</archive>
         </mailingList>
     </mailingLists>
-
-
     <scm>
         <connection>scm:git:git://github.com/xulman/TomancakLab</connection>
         <developerConnection>scm:git:localhost:9999</developerConnection>
@@ -65,13 +57,11 @@
     <ciManagement>
         <system>None</system>
     </ciManagement>
-
     <properties>
         <license.licenseName>cc0</license.licenseName>
         <license.copyrightOwners>None</license.copyrightOwners>
         <license.projectName>None</license.projectName>
     </properties>
-
     <repositories>
         <repository>
             <id>imagej.public</id>
@@ -95,12 +85,7 @@
             <artifactId>gs-core</artifactId>
             <version>1.1.1</version>
         </dependency>
-        <dependency>
-            <groupId>sc.fiji</groupId>
-            <artifactId>DetectSphericalStructures</artifactId>
-            <version>0.1.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
+         <dependency>
             <groupId>org.mastodon</groupId>
             <artifactId>mastodon-collection</artifactId>
             <version>1.0.0-beta-19-SNAPSHOT</version>

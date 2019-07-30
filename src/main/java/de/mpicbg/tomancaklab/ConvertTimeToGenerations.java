@@ -78,7 +78,7 @@ public class ConvertTimeToGenerations extends AbstractContextual implements Mast
         actions.namedAction(ConvertTimeToGenerations, noShortCut);
     }
 
-    private MastodonPluginAppModel pluginAppModel;
+    private static MastodonPluginAppModel pluginAppModel;
 
     @Override
     public void setAppModel(final MastodonPluginAppModel model) {
@@ -112,7 +112,7 @@ public class ConvertTimeToGenerations extends AbstractContextual implements Mast
         ModelGraph modelGraphCondensed = new ModelGraph();
         double[] pos;
         double[][] covariance = new double[3][3];
-        for (int time = timeStart; time < timeEnd+1; time++) {
+        for (int time = timeStart; time < timeEnd + 1; time++) {
 
             for (final Spot loopspot : spots.getSpatialIndex(time)) {
 
@@ -120,46 +120,29 @@ public class ConvertTimeToGenerations extends AbstractContextual implements Mast
                 if (time == timeStart) {
                     divisionCounter.put(spot, 0);
                     ancestry.put(spot, spot);
+                    pos = new double[]{spot.getDoublePosition(0), spot.getDoublePosition(1), spot.getDoublePosition(2)};
+                    spot.getCovariance(covariance);
+                    final Spot currentVertex = modelGraphCondensed.addVertex().init(timeStart, pos, covariance);
+                    currentVertex.setLabel(spot.getLabel());
+                    avatar.put(spot, currentVertex);
 
 
                 } else if (time == timeEnd) {
                     Spot parent = spot.incomingEdges().get(0).getSource();
                     numberSiblings = spot.incomingEdges().get(0).getSource().outgoingEdges().size() - 1;
 
-                    if (avatar.get(ancestry.get(parent)) == null) {
 
-                        pos = new double[]{ancestry.get(parent).getDoublePosition(0), ancestry.get(parent).getDoublePosition(1), ancestry.get(parent).getDoublePosition(2)};
-                        ancestry.get(parent).getCovariance(covariance);
-                        final Spot parentVertex = modelGraphCondensed.addVertex().init(divisionCounter.get(parent), pos, covariance);
-                        parentVertex.setLabel(ancestry.get(parent).getLabel());
-                        avatar.put(ancestry.get(parent), parentVertex);
-                        pos = new double[]{spot.getDoublePosition(0), spot.getDoublePosition(1), spot.getDoublePosition(2)};
-                        spot.getCovariance(covariance);
-                        final Spot currentVertex = modelGraphCondensed.addVertex().init(divisionCounter.get(parent) + 1, pos, covariance);
-                        currentVertex.setLabel(spot.getLabel());
-
-                        avatar.put(spot, currentVertex);
-                        modelGraphCondensed.addEdge(parentVertex, currentVertex);
-                        divisionCounter.put(spot, divisionCounter.get(parent));
-                        if (numberSiblings == 0) {
-                            ancestry.put(spot, ancestry.get(parent));
-                        } else {
-                            ancestry.put(spot, parent);
-                        }
-
+                    pos = new double[]{spot.getDoublePosition(0), spot.getDoublePosition(1), spot.getDoublePosition(2)};
+                    spot.getCovariance(covariance);
+                    final Spot currentVertex = modelGraphCondensed.addVertex().init(divisionCounter.get(parent) + 1, pos, covariance);
+                    currentVertex.setLabel(spot.getLabel());
+                    avatar.put(spot, currentVertex);
+                    modelGraphCondensed.addEdge(avatar.get(ancestry.get(parent)), currentVertex);
+                    divisionCounter.put(spot, divisionCounter.get(parent));
+                    if (numberSiblings == 0) {
+                        ancestry.put(spot, ancestry.get(parent));
                     } else {
-                        pos = new double[]{spot.getDoublePosition(0), spot.getDoublePosition(1), spot.getDoublePosition(2)};
-                        spot.getCovariance(covariance);
-                        final Spot currentVertex = modelGraphCondensed.addVertex().init(divisionCounter.get(parent) + 1, pos, covariance);
-                        currentVertex.setLabel(spot.getLabel());
-                        avatar.put(spot, currentVertex);
-                        modelGraphCondensed.addEdge(avatar.get(ancestry.get(parent)), currentVertex);
-                        divisionCounter.put(spot, divisionCounter.get(parent));
-                        if (numberSiblings == 0) {
-                            ancestry.put(spot, ancestry.get(parent));
-                        } else {
-                            ancestry.put(spot, parent);
-                        }
+                        ancestry.put(spot, parent);
                     }
 
 
@@ -168,24 +151,10 @@ public class ConvertTimeToGenerations extends AbstractContextual implements Mast
                     Spot parent = spot.incomingEdges().get(0).getSource();
                     if (parent != null) {
 
-                    numberChildren = spot.outgoingEdges().size();
-                    numberSiblings = spot.incomingEdges().get(0).getSource().outgoingEdges().size() - 1;
-                    if (numberChildren > 1 && numberSiblings == 0) {
-                        if (avatar.get(ancestry.get(parent)) == null) {
-                            pos = new double[]{ancestry.get(parent).getDoublePosition(0), ancestry.get(parent).getDoublePosition(1), ancestry.get(parent).getDoublePosition(2)};
-                            ancestry.get(parent).getCovariance(covariance);
-                            final Spot parentVertex = modelGraphCondensed.addVertex().init(divisionCounter.get(parent), pos, covariance);
-                            parentVertex.setLabel(ancestry.get(parent).getLabel());
-                            avatar.put(ancestry.get(parent), parentVertex);
-                            pos = new double[]{spot.getDoublePosition(0), spot.getDoublePosition(1), spot.getDoublePosition(2)};
-                            spot.getCovariance(covariance);
-                            final Spot currentVertex = modelGraphCondensed.addVertex().init(divisionCounter.get(parent) + 1, pos, covariance);
-                            currentVertex.setLabel(spot.getLabel());
-                            avatar.put(spot, currentVertex);
-                            modelGraphCondensed.addEdge(parentVertex, currentVertex);
-                            divisionCounter.put(spot, divisionCounter.get(parent) + 1);
-                            ancestry.put(spot, ancestry.get(parent));
-                        } else {
+                        numberChildren = spot.outgoingEdges().size();
+                        numberSiblings = spot.incomingEdges().get(0).getSource().outgoingEdges().size() - 1;
+                        if (numberChildren > 1 && numberSiblings == 0) {
+
                             pos = new double[]{spot.getDoublePosition(0), spot.getDoublePosition(1), spot.getDoublePosition(2)};
                             spot.getCovariance(covariance);
                             final Spot currentVertex = modelGraphCondensed.addVertex().init(divisionCounter.get(parent) + 1, pos, covariance);
@@ -194,26 +163,26 @@ public class ConvertTimeToGenerations extends AbstractContextual implements Mast
                             modelGraphCondensed.addEdge(avatar.get(ancestry.get(parent)), currentVertex);
                             divisionCounter.put(spot, divisionCounter.get(parent) + 1);
                             ancestry.put(spot, ancestry.get(parent));
+
+
+                        } else if (numberSiblings > 0 && numberChildren == 1) {
+                            divisionCounter.put(spot, divisionCounter.get(parent));
+                            ancestry.put(spot, parent);
+
+                        } else if (numberSiblings > 0 && numberChildren > 1) {
+                            divisionCounter.put(spot, divisionCounter.get(parent) + 1);
+                            ancestry.put(spot, parent);
+                            pos = new double[]{spot.getDoublePosition(0), spot.getDoublePosition(1), spot.getDoublePosition(2)};
+                            spot.getCovariance(covariance);
+                            final Spot currentVertex = modelGraphCondensed.addVertex().init(divisionCounter.get(parent) + 1, pos, covariance);
+                            currentVertex.setLabel(spot.getLabel());
+                            avatar.put(spot, currentVertex);
+                            modelGraphCondensed.addEdge(avatar.get(parent), currentVertex);
+                        } else {
+                            divisionCounter.put(spot, divisionCounter.get(parent));
+                            ancestry.put(spot, ancestry.get(parent));
                         }
-
-                    } else if (numberSiblings > 0 && numberChildren == 1) {
-                        divisionCounter.put(spot, divisionCounter.get(parent));
-                        ancestry.put(spot, parent);
-
-                    } else if (numberSiblings > 0 && numberChildren > 1) {
-                        divisionCounter.put(spot, divisionCounter.get(parent) + 1);
-                        ancestry.put(spot, parent);
-                        pos = new double[]{spot.getDoublePosition(0), spot.getDoublePosition(1), spot.getDoublePosition(2)};
-                        spot.getCovariance(covariance);
-                        final Spot currentVertex = modelGraphCondensed.addVertex().init(divisionCounter.get(parent) + 1, pos, covariance);
-                        currentVertex.setLabel(spot.getLabel());
-                        avatar.put(spot, currentVertex);
-                        modelGraphCondensed.addEdge(avatar.get(parent), currentVertex);
-                    } else {
-                        divisionCounter.put(spot, divisionCounter.get(parent));
-                        ancestry.put(spot, ancestry.get(parent));
                     }
-                }
 
                 }
 
@@ -223,7 +192,7 @@ public class ConvertTimeToGenerations extends AbstractContextual implements Mast
     }
 
 
-    private void showModelGraph(ModelGraph modelGraph) {
+    public static void showModelGraph(ModelGraph modelGraph) {
 
         TrackSchemeGraph<Spot, Link> trackSchemeGraph = new TrackSchemeGraph<>(
                 modelGraph,
@@ -288,22 +257,17 @@ public class ConvertTimeToGenerations extends AbstractContextual implements Mast
         trackSchemePanel.getTransformEventHandler().install(viewBehaviours);
         FocusActions.install(viewActions, trackSchemeGraph, trackSchemeGraph.getLock(), navigateFocusModel, selectionModel);
         TrackSchemeZoom.install(viewBehaviours, trackSchemePanel);
-       jFrame.setVisible(true);
+        jFrame.setVisible(true);
     }
 
 
     public static void main(String... args) throws Exception {
-
-
         final String projectPath = "/home/manan/Desktop/03_Datasets/13-03-12/Mastodon_w-lineage-ID";
-
         Locale.setDefault(Locale.US);
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-
         final Mastodon mastodon = new Mastodon();
         new Context().inject(mastodon);
         mastodon.run();
-
         final MamutProject project = new MamutProjectIO().load(projectPath);
         mastodon.openProject(project);
     }
