@@ -17,6 +17,8 @@ import org.mastodon.revised.model.mamut.Link;
 import org.mastodon.revised.model.mamut.Model;
 import org.mastodon.revised.model.mamut.ModelGraph;
 import org.mastodon.revised.model.mamut.Spot;
+import org.mastodon.revised.model.tag.TagSetModel;
+import org.mastodon.revised.model.tag.TagSetStructure;
 import org.mastodon.revised.trackscheme.TrackSchemeEdge;
 import org.mastodon.revised.trackscheme.TrackSchemeGraph;
 import org.mastodon.revised.trackscheme.TrackSchemeVertex;
@@ -97,6 +99,32 @@ public class ConvertTimeToGenerations extends AbstractContextual implements Mast
         logServiceRef = this.getContext().getService(LogService.class).log();
         logServiceRef.trace("Saved the tracked data in a new format ...");
         final Model model = pluginAppModel.getAppModel().getModel();
+        final TagSetModel< Spot, Link > tags = model.getTagSetModel();
+
+        final TagSetStructure tss = new TagSetStructure();
+        tss.set( tags.getTagSetStructure() );
+
+        final TagSetStructure.TagSet ts = tss.createTagSet( "manan 1" );
+        final TagSetStructure.Tag tag1 = ts.createTag( "tag1", 0xffff0000 ); // red
+        final TagSetStructure.Tag tag2 = ts.createTag( "tag2", 0xffffff00 ); // yellow
+        final TagSetStructure.Tag tag3 = ts.createTag( "tag3", 0xff0000ff ); // blue
+
+        tags.setTagSetStructure( tss );
+
+        final Iterator< Spot > iterator = model.getGraph().vertices().iterator();
+        int counter=0;
+        while(counter<100){
+            System.out.println(counter);
+            iterator.next();
+            tags.getVertexTags().set(iterator.next(), tag1);
+            tags.getVertexTags().set( iterator.next(), tag2);
+            tags.getVertexTags().set( iterator.next(), tag3 );
+            counter++;
+        }
+
+
+
+
         ModelGraph modelGraph = model.getGraph();
         final SpatioTemporalIndex<Spot> spots = model.getSpatioTemporalIndex();
         condenseGraph(spots, pluginAppModel.getAppModel().getMinTimepoint(), pluginAppModel.getAppModel().getMaxTimepoint(), modelGraph);
@@ -258,6 +286,7 @@ public class ConvertTimeToGenerations extends AbstractContextual implements Mast
         FocusActions.install(viewActions, trackSchemeGraph, trackSchemeGraph.getLock(), navigateFocusModel, selectionModel);
         TrackSchemeZoom.install(viewBehaviours, trackSchemePanel);
         jFrame.setVisible(true);
+
     }
 
 
