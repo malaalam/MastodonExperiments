@@ -299,6 +299,9 @@ public class ConvertTimeToGenerations extends AbstractContextual implements Mast
         mastodon.run();
         final MamutProject project = new MamutProjectIO().load(projectPath);
         mastodon.openProject(project);
+
+
+
     }
 
 }
